@@ -1,7 +1,5 @@
 ﻿using CompanyName.MyMeetings.BuildingBlocks.Infrastructure.SeedWork;
-using CompanyName.MyMeetings.Modules.UserAccess.Domain.UserRegistration;
-using CompanyName.MyMeetings.Modules.UserAccess.Domain.UserRegistration.Events;
-using CompanyName.MyMeetings.Modules.UserAccess.Domain.Users;
+using CompanyName.MyMeetings.Modules.UserAccess.Domain.UserRegistrations.Events;
 using Newtonsoft.Json;
 
 namespace CompanyName.MyMeetings.Modules.UserAccess.Application.UserRegistrations.RegisterNewUser
