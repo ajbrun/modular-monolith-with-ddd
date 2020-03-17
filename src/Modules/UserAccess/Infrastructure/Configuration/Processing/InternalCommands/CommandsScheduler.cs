@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using CompanyName.MyMeetings.BuildingBlocks.Application.Data;
 using CompanyName.MyMeetings.BuildingBlocks.Infrastructure;
 using CompanyName.MyMeetings.Modules.UserAccess.Application.Configuration.Commands;
 using CompanyName.MyMeetings.Modules.UserAccess.Application.Contracts;
@@ -22,6 +23,25 @@ namespace CompanyName.MyMeetings.Modules.UserAccess.Infrastructure.Configuration
         }
 
         public async Task EnqueueAsync(ICommand command)
+        {
+            var connection = this._sqlConnectionFactory.GetOpenConnection();
+
+            const string sqlInsert = "INSERT INTO [users].[InternalCommands] ([Id], [EnqueueDate] , [Type], [Data]) VALUES " +
+                                     "(@Id, @EnqueueDate, @Type, @Data)";
+
+            await connection.ExecuteAsync(sqlInsert, new
+            {
+                command.Id,
+                EnqueueDate = DateTime.UtcNow,
+                Type = command.GetType().FullName,
+                Data = JsonConvert.SerializeObject(command, new JsonSerializerSettings
+                {
+                    ContractResolver = new AllPropertiesContractResolver()
+                })
+            });
+        }
+
+        public async Task EnqueueAsync<T>(ICommand<T> command)
         {
             var connection = this._sqlConnectionFactory.GetOpenConnection();
 
